@@ -1,230 +1,308 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
-	<title>Henvisningsskabelon</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Henvisningsskabelon</title>
 
-	<style>
-		.nfk_outerContainer {width:700px;position:relative;font-size:11px;color:#333333;zoom:110%;}
-
-		.nfk_container {width:696px;background-color:#E6E9EE;position:relative;border:thin solid black;height:auto;float:left;box-sizing:content-box;font-family:"mariregular","Helvetica Neue",Helvetica,Arial,sans-serif !important;}
-		.nfk_container .nfk_centerCol {padding-left:2%;padding-right:2%;width:96%}
-		.nfk_container .nfk_leftCol {padding-left:2%;padding-right:1%;width:27%; float:left;text-align:right;background-color:#E6E9EE}
-		.nfk_container .nfk_rightCol {padding-left:0%;padding-right:2%;width:68%; float:right;text-align:left;background-color:#E6E9EE}
-		.nfk_container .nfk_containerPadded {padding-left:2%;padding-right:2%}
-		.nfk_container textarea {background-color:#ffffff;border:1px solid black;width:100%;height:80px;resize:none;padding:0px;}
-		.nfk_title {text-align:center;height:40px;line-height:40px;font-size:24px;position:relative;background-color:#97FF00;}
-		.nfk_instructions {text-align:left;line-height:20px;background-color:#DAD9D9;border-bottom:thin solid black;font-size:14px;padding-top:5px;padding-bottom:5px;}
-		.nfk_rowSpacerMed {height:10px;clear:both;}
-		.nfk_rowSpacerShort {height:5px;clear:both;}
-		.nfk_rowSpacerLine {height:1px;background-color:#C8C8C8;}
-
-		.checkbox-grid li {display:block; float:left;font-weight:normal; width:25%; padding_left:0%;font-size:11px;text-align:left}
-
-	</style>
-
-	<script>
-		function nfk_returnIfChecked(e, text) {
-			if ( document.getElementById(e).checked == true ) {
-				return text;
-			} else {
-				return '';
-			} 
-		}
-
-		function emgChecked() {
-      // Get the checkbox
-      var checkbox = document.getElementById("checkboxEmg");
-      // Get the output text
-      var textarea = document.getElementById("textareaEmg");
-
-      // If the checkbox is checked, display the output text
-      if (checkbox.checked == true){
-      	textarea.style.display = "block";
-      } 
-      else {
-      	textarea.style.display = "none";
-      }
-  }
-  function esf_returnIfSet(e, text) {
-  	if ( e.value.length > 0 ) {
-  		return text;
-  	} else {
-  		return '';
-  	}
-  }
-  function  generatePressed() {
-
-  	var checkboxEmg = document.getElementById("checkboxEmg");
-  	var lb = '<br />';
-  	var vl = '- - -';
-  	var textareaProblematik = document.getElementById('textareaProblematik');
-  	var textareaTentativ = document.getElementById('textareaTentativ');
-
-  	var textOut = 'Ønskede undersøgelser:'+lb+
-  	nfk_returnIfChecked("EEG", 'EEG'+lb)+
-  	nfk_returnIfChecked("EMG", 'EMG'+lb)+
-  	nfk_returnIfChecked("ENG", 'ENG'+lb)+
-  	nfk_returnIfChecked("VEP", 'VEP'+lb)+
-  	nfk_returnIfChecked("SEP", 'SEP'+lb)+
-  	nfk_returnIfChecked("MEP", 'MEP'+lb)+
-  	nfk_returnIfChecked("MEG", 'MEG'+lb)+
-  	nfk_returnIfChecked("søvn", 'søvn'+lb)+
-  	nfk_returnIfChecked("ERG", 'ERG'+lb)+
-  	nfk_returnIfChecked("EOG", 'EOG'+lb)+
-  	nfk_returnIfChecked("UL", 'UL'+lb)+
-
-  	esf_returnIfSet(textareaProblematik, lb+"Kliniske problematik:"+lb+textareaProblematik.value)+
-
-  	esf_returnIfSet(textareaTentativ, lb+lb+"Tentativ diagnose:"+lb+textareaTentativ.value)
-
-
-
-  	;
-
-  	document.getElementById("textResult").innerHTML = textOut;;
-  	nfk_selectElementContents(document.getElementById('textResult'));
-  }
-
-  function nfk_selectElementContents(e) {
-  	var doc = document
-  	, text = e
-  	, range, selection
-  	;    
-        if (doc.body.createTextRange) { //ms
-        	range = doc.body.createTextRange();
-        	range.moveToElementText(text);
-        	range.select();
-        } else if (window.getSelection) { //all others
-        	selection = window.getSelection();        
-        	range = doc.createRange();
-        	range.selectNodeContents(text);
-        	selection.removeAllRanges();
-        	selection.addRange(range);
-        }
+  <!-- CSS styling -->
+  <style>
+    .nfk_outerContainer {
+      width:700px;
+      position:relative;
+      zoom:110%
     }
+    .nfk_container {
+      width:100%;
+      background-color:#eee;
+      position:relative;
+      border:thin solid black;
+      height:auto;
+      box-sizing:content-box;
+      font-family:"Verdana";
+      font-size:11px
+    }
+    .nfk_container .nfk_centerCol {
+      padding-left:2%;
+      padding-right:2%;
+      width:96%
+    }
+    .nfk_container .nfk_leftCol {
+      padding-left:2%;
+      padding-right:1%;
+      width:27%; 
+      float:left;
+      text-align:right;
+      font-weight:bold;
+      font-size:11px;
+      font-weight:bold
+    }
+    .nfk_container .nfk_rightCol {
+      padding-left:1%;
+      padding-right:2%;
+      width:67%;
+      float:right;
+      text-align:left
+    }
+
+    .nfk_checkbox li {
+      display:block;
+      float:left;
+      position:relative;
+      left:-10%;
+      font-weight:normal;
+      width:25%;
+      text-align:left
+    }
+    .nfk_container textarea {
+      background-color:#ffffff;
+      border:1px solid black;
+      width:100%;
+      resize:none
+    }
+    input[type="radio"] + label:before {
+      display:block;
+      width:10%;
+      float:left;
+      position:relative;
+      font-weight:normal;
+      text-align:left
+    }
+    input[type="radio"]{
+      cursor:pointer;
+      padding-left:-10px
+    }
+    input[type="checkbox"]{
+      cursor:pointer
+    }
+    .nfk_title {
+      text-align:center;
+      height:50px;
+      line-height:50px;
+      font-size:20px;
+      color:white;
+      position:relative;
+      background-color:#990033
+    }
+    .nfk_instructions {
+      text-align:left;
+      line-height:20px;
+      color:black;
+      background-color:#DDD6C8;
+      border-bottom:thin solid black;
+      font-size:14px;
+      padding-top:15px;
+      padding-bottom:15px
+    }
+
+    .nfk_rowSpacerMed {
+      height:10px;
+      clear:both
+    }
+    .nfk_rowSpacerShort {
+      height:5px;
+      clear:both
+    }
+    .nfk_rowSpacerLine {
+      height:1px;
+      background-color:#C8C8C8
+    }
+
+    label {
+      display:inline-block;
+      cursor:pointer;
+      position:relative;
+      padding-left:0px;
+      line-height:20px
+    } 
+  </style>
+
+  <!-- JS functions -->
+  <script>
+    function returnIfChecked(e, text) {
+      if ( document.getElementById(e).checked == true ) {
+        return text;
+      } else {
+        return '';
+      } 
+    }
+
+    function displayElement(id) {
+      var element = document.getElementById(id);
+      element.style.display = "block";
+    }
+
+    function hideElement(id) {
+      var element = document.getElementById(id);
+      element.style.display = "none";
+    }
+
+    function returnIfSet(e, text) {
+      if ( e.value.length > 0 ) {
+        return text;
+      } else {
+        return '';
+      }
+    }
+
+    function  generateResult() {
+      var lb = "<br/>";
+      var lbb = lb+"> ";
+      // var textareaProblematik = document.getElementById('textareaProblematik');
+      // var textareaTentativ = document.getElementById('textareaTentativ');
+      // var textareaTransport = document.getElementById("textareaTransport");
+      // var textareaTolk = document.getElementById("textareaTolk");
+      // var textarea = document.getElementById("textareaTransport");
+      // var textareaTransport = document.getElementById("textareaTransport");
+
+      var textOut = "Ønskede undersøgelser:"
+      +returnIfChecked("EEG", lbb+"EEG")
+      +returnIfChecked("EMG", lbb+"EMG")
+      +returnIfChecked("ENG", lbb+"ENG")
+      +returnIfChecked("VEP", lbb+"VEP")
+      +returnIfChecked("SEP", lbb+"SEP")
+      +returnIfChecked("MEP", lbb+"MEP")
+      +returnIfChecked("MEG", lbb+"MEG")
+      +returnIfChecked("søvn", lbb+"søvn")
+      +returnIfChecked("ERG", lbb+"ERG")
+      +returnIfChecked("EOG", lbb+"EOG")
+      +lb
+      +lb+"Kliniske problematik:"
+      +returnIfSet(textareaProblematik,lbb+textareaProblematik.value)
+      +lb
+      +lb+"Tentativ diagnose:"
+      +returnIfSet(textareaTentativ,lbb+textareaTentativ.value)
+      +lb
+      +lb+"Transport behov? "+returnIfChecked("transport1", lbb+"Ja")+returnIfChecked("transport2", lbb+"Nej")
+      +returnIfChecked("transport1", lbb+textareaTransport.value)
+      +lb+"Behov for tolk?"+returnIfChecked("tolk1", lbb+"Ja")+returnIfChecked("tolk2", lbb+"Nej")
+      +returnIfChecked("tolk1", lbb+textareaTolk.value)
+      +lb+"Patient i AK-behandling?"+returnIfChecked("ak1", lbb+"Ja")+returnIfChecked("ak2", lbb+"Nej")
+      +returnIfChecked("ak1", lbb+textareaAk.value)
+      +lb+"Andre særlige forhold?"+returnIfChecked("andre1", lbb+"Ja")+returnIfChecked("andre2", lbb+"Nej")
+      +returnIfChecked("andre1", lbb+textareaAndre.value)      
+      ;
+
+      document.getElementById("textResult").innerHTML = textOut;;
+      nfk_selectElementContents(document.getElementById("textResult"));
+    }
+
+    function nfk_selectElementContents(e) {
+      var doc = document
+      , text = e
+      , range, selection
+      ;    
+if (doc.body.createTextRange) { //ms
+  range = doc.body.createTextRange();
+  range.moveToElementText(text);
+  range.select();
+} else if (window.getSelection) { //all others
+  selection = window.getSelection();        
+  range = doc.createRange();
+  range.selectNodeContents(text);
+  selection.removeAllRanges();
+  selection.addRange(range);
+}
+}
 </script>
 
 
 
 </head>
 <body>
-	<div class="nfk_outerContainer">
-		<div class="nfk_container">
+  <div class="nfk_outerContainer">
 
-			<div class="nfk_title">Henvisningsskabelon til AUH Neurofysiologi</div>
+    <!-- MAIN BLOK -->
+    <div class="nfk_container">
+      <div class="nfk_title">Henvisningsskabelon til neurofysiologisk undersøgelse
+        <img src="https://sighok.github.io/Region-Midt-logo.jpeg" style="height: 45px; float: right; padding-top:5px">
+      </div>
+      <div class="nfk_instructions nfk_centerCol">1. Udfyld nedenstående felter og tryk på knappen "Generér oplæg"<br>2. Kopier oplægget over i den elektroniske henvisning (EPJ)</div>
 
-			<div class="nfk_instructions nfk_centerCol">1. Udfyld nedenstående felter og tryk på knappen "Generér oplæg"<br>2. Kopier oplægget over i den elektroniske henvisning (EPJ)</div>
+      <!-- Ønskede undersøgelser... -->
+      <div class="nfk_leftCol"style="font-weight:bold;font-size:11px;padding-top:12px;">Ønskede undersøgelser</div>
+      <div class="nfk_rightCol">
+        <ul class="nfk_checkbox">
+          <li><input type="checkbox" id="EEG" name="EEG" value="EEG"><label for="EEG"> EEG</label></li>
+          <li><input type="checkbox" id="EMG" name="EMG" value="EMG"><label for="EMG"> EMG</label></li>
+          <li><input type="checkbox" id="ENG" name="ENG" value="ENG"><label for="ENG"> ENG</label></li>
+          <li><input type="checkbox" id="VEP" name="VEP" value="VEP"><label for="VEP"> VEP</label></li>
+          <li><input type="checkbox" id="SEP" name="SEP" value="SEP"><label for="SEP"> SEP</label></li>
+          <li><input type="checkbox" id="MEP" name="MEP" value="MEP"><label for="MEP"> MEP</label></li>
+          <li><input type="checkbox" id="MEG" name="MEG" value="MEG"><label for="MEG"> MEG</label></li>
+          <li><input type="checkbox" id="søvn" name="søvn" value="søvn"><label for="søvn"> Søvn</label></li>
+          <li><input type="checkbox" id="ERG" name="ERG" value="ERG"><label for="ERG"> ERG</label></li>
+          <li><input type="checkbox" id="EOG" name="EOG" value="EOG"><label for="EOG"> EOG</label></li>
+          <li><input type="checkbox" id="UL" name="UL" value="UL"><label for="UL">UL</label></li>
+        </ul> 
+      </div>
+      <div class="nfk_rowSpacerMed"></div><div class=nfk_rowSpacerLine></div><div class="nfk_rowSpacerMed"></div>
 
-			<div class="nfk_leftCol"style="font-weight:bold;font-size:11px;padding-top:12px;">Ønskede undersøgelser </div>
+      <!-- Den kliniske problematik... -->
+      <div class="nfk_leftCol">Den kliniske problematik</div>
+      <div class="nfk_rightCol">
+        <textarea id="textareaProblematik" style="display:block; height:70px; width:fill; border:thin solid black;" ></textarea>  
+      </div>
+      <div class="nfk_rowSpacerMed"></div><div class=nfk_rowSpacerLine></div><div class="nfk_rowSpacerMed"></div>
 
-			<div class="nfk_rightCol">
-				<ul class="checkbox-grid">
-					<li><input type="checkbox" id="EEG" name="EEG" value="EEG"><label for="EEG"> EEG</label></li>
-					<li><input type="checkbox" id="EMG" name="EMG" value="EMG"><label for="EMG"> EMG</label></li>
-					<li><input type="checkbox" id="ENG" name="ENG" value="ENG"><label for="ENG"> ENG</label></li>
-					<li><input type="checkbox" id="VEP" name="VEP" value="VEP"><label for="VEP"> VEP</label></li>
-					<li><input type="checkbox" id="SEP" name="SEP" value="SEP"><label for="SEP"> SEP</label></li>
-					<li><input type="checkbox" id="MEP" name="MEP" value="MEP"><label for="MEP"> MEP</label></li>
-					<li><input type="checkbox" id="MEG" name="MEG" value="MEG"><label for="MEG"> MEG</label></li>
-					<li><input type="checkbox" id="søvn" name="søvn" value="søvn"><label for="søvn"> søvn</label></li>
-					<li><input type="checkbox" id="ERG" name="ERG" value="ERG"><label for="ERG"> ERG</label></li>
-					<li><input type="checkbox" id="EOG" name="EOG" value="EOG"><label for="EOG"> EOG</label></li>
-					<li><input type="checkbox" id="UL" name="UL" value="UL"><label for="UL"> UL</label></li>
-				</ul> 
-			</div>
+      <!-- Tentativ diagnose... -->
+      <div class="nfk_leftCol">Tentativ diagnose</div>
+      <div class="nfk_rightCol">
+        <textarea id="textareaTentativ" style="display:block; height:70px; width:fill; border:thin solid black;" ></textarea>
+      </div>
+      <div class="nfk_rowSpacerMed"></div><div class=nfk_rowSpacerLine></div><div class="nfk_rowSpacerMed"></div>
 
-			<div class="nfk_rowSpacerMed"></div>
-			<div class=nfk_rowSpacerLine></div>
-			<div class="nfk_rowSpacerMed"></div>
-			<div class="nfk_leftCol"style="font-weight:bold;font-size:11px">Den kliniske problematik, som ønskes undersøgt</div>
-			<div class="nfk_rightCol">
-				<textarea id="textareaProblematik" style="display:block; height:70px; width:fill; border:thin solid black;" ></textarea>
-			</div>
+      <!-- Ja/nej spø... -->
+      <div class="nfk_leftCol">Behov for transport?</div>
+      <div class="nfk_rightCol">
+        <input type="radio" name="transport" id="transport1" value="Ja" onclick="displayElement('textareaTransport')"><label for="transport1">Ja</label>
+        <input type="radio" name="transport" id="transport2" value="Nej" onclick="hideElement('textareaTransport')"><label for="transport2">Nej</label>
+        <textarea id="textareaTransport" placeholder="Beskriv..." style="display:none;height:20px; width:50%;border:thin solid black"></textarea>
+      </div>
+      <div class="nfk_rowSpacerShort"></div>
 
-			<div class="nfk_rowSpacerMed"></div>
-			<div class=nfk_rowSpacerLine></div>
-			<div class="nfk_rowSpacerMed"></div>
-			<div class="nfk_leftCol"style="font-weight:bold;font-size:11px">Tentativ diagnose</div>
-			<div class="nfk_rightCol">
-				<textarea id="textareaTentativ" style="display:block; height:70px; width:fill; border:thin solid black;" ></textarea>
-			</div>
+      <div class="nfk_leftCol">Behov for tolk?</div>
+      <div class="nfk_rightCol">
+        <input type="radio" name="tolk" id="tolk1" value="Ja" onclick="displayElement('textareaTolk')"><label for="tolk1">Ja</label>
+        <input type="radio" name="tolk" id="tolk2" value="Nej" onclick="hideElement('textareaTolk')"><label for="tolk2">Nej</label>
+        <textarea id="textareaTolk" placeholder="Sprog?" style="display:none;height:20px; width:50%;border:thin solid black"></textarea>
+      </div>
+      <div class="nfk_rowSpacerShort"></div>
 
-			<div class="nfk_rowSpacerMed"></div>
-			<div class=nfk_rowSpacerLine></div>
-			<div class="nfk_rowSpacerMed"></div>
+      <div class="nfk_leftCol">Patient i AK-behandling?</div>
+      <div class="nfk_rightCol">
+        <input type="radio" name="ak" id="ak1" value="Ja" onclick="displayElement('textareaAk')"><label for="ak1">Ja</label>
+        <input type="radio" name="ak" id="ak2" value="Nej" onclick="hideElement('textareaAk')"><label for="ak2">Nej</label>
+        <textarea id="textareaAk" placeholder="Hvilken?" style="display:none;height:20px; width:50%;border:thin solid black"></textarea>
+      </div>
+      <div class="nfk_rowSpacerShort"></div>
 
+      <div class="nfk_leftCol">Andre særlige forhold?</div>
+      <div class="nfk_rightCol">
+        <input type="radio" name="andre" id="andre1" value="Ja" onclick="displayElement('textareaAndre')"><label for="andre1">Ja</label>
+        <input type="radio" name="andre" id="andre2" value="Nej" onclick="hideElement('textareaAndre')"><label for="andre1">Nej</label>
+        <textarea id="textareaAndre" placeholder="Beskriv..." style="display:none;height:20px; width:50%;border:thin solid black"></textarea>
+      </div>
+      <div class="nfk_rowSpacerShort"></div>
 
-			<div class="nfk_leftCol"style="font-weight:bold;font-size:11px">Behov for transport?</div>
-			<select id="transportBehov" onchange="">
-				<option value="Vælg...">Vælg...</option>
-				<option value="Ingen">Ingen</option>
-				<option value="Liggende transport">Liggende transport</option>
-				<option value="Siddende transport">Siddende transport</option>
-			</select>
-
-
-			<div class="nfk_rowSpacerShort"></div>
-
-
-			<div class="nfk_leftCol"style="font-weight:bold;font-size:11px">Behov for tolk?</div>
-
-			<div class="nfk_rightCol">
-				&nbsp; Ja  &nbsp;   Nej  <br>
-				<input type="radio" name="tolkJa" value="Ja" onclick=""> <input type="radio" name="tolkNej" value="Nej" onclick="">
-			</div>
-
-
-			<div class="nfk_rowSpacerShort"></div>
-
-
-			<div class="nfk_leftCol"style="font-weight:bold;font-size:11px">Patient i AK-behandling?</div>
-
-			<div class="nfk_rightCol">
-				&nbsp; Ja  &nbsp;   Nej  <br>
-				<input type="radio" name="akJa" value="Ja" onclick=""> <input type="radio" name="akNej" value="Nej" onclick="">
-			</div>
-
-			<div class="nfk_rowSpacerShort"></div>
-
-			<div class="nfk_leftCol"style="font-weight:bold;font-size:11px">Andre særlige behov</div>
-			<div class="nfk_rightCol">
-				&nbsp; Ja  &nbsp;   Nej  <br>
-				<input type="radio" name="andetJa" value="Ja" onclick=""> <input type="radio" name="andetNej" value="Nej" onclick="">
-
-
-			</div>
-
-			<textarea id="textareaAndet" style="display:none; height:70px; width:fill; border:thin solid black;" ></textarea>
+      <div class="nfk_rowSpacerShort"></div>
+      <div class=nfk_rowSpacerLine></div> 
+      <div class="nfk_rowSpacerMed"></div>
+      <input type="button" onclick="generateResult()" value="Generér oplæg"  style="border: thin solid black; float:right; margin-right:1%;padding:2px;font-weight: normal;background-color:white ; padding-left: 3%;padding-right: 3%">
+      <div class=nfk_rowSpacerMed></div>
+    </div>
+    <div class="nfk_rowSpacerMed"></div>
+    <div class="nfk_rowSpacerMed"></div>
 
 
-			<div class=nfk_rowSpacerLine></div>	
+    <!-- RESULTAT -->
+    <div class="nfk_container">
+      <div class="nfk_title">Resultat</div>
+      <div class="nfk_instructions nfk_centerCol">Teksten kopieres over i den elektroniske henvisning (EPJ)</div>
+      <div class="nfk_centerCol" id="textResult" style="height:auto;min-height:40px;line-height:16px;padding-top:5px;font-family:Courier, monospace;" id="esf_resultat">Oplægget vises her</div>
+    </div>
 
-			<div class="nfk_rowSpacerMed"></div>
-			<input type="button" onclick="generatePressed()" value="Generér oplæg"  style="border: thin solid black; float:right; margin-right:10px;">
-			<div class=nfk_rowSpacerMed></div>
-			<div class=nfk_rowSpacerLine></div>	
-			
-
-
-
-
-
-		</div>
-
-			<div class="nfk_rowSpacerMed"></div>
-			<div class="nfk_rowSpacerMed"></div>
-
-		<div class="nfk_container">
-
-			<div class="nfk_title" style="background-color:#FFD5A9">Resultat</div>
-			<div class="nfk_instructions nfk_centerCol">Teksten kopieres over i den elektroniske henvisning (EPJ)</div>
-			<div class="nfk_centerCol" id="textResult" style="height:auto;min-height:40px;line-height:16px;padding-top:5px;font-family:Courier, monospace;" id="esf_resultat">Oplægget vil blive vist her, når du har udfyldt skabelonen og trykket på knappen "Generér oplæg".
-			</div>
-		</div>
-
-	</div>
+  </div>
 </body>
 </html>
 
@@ -240,73 +318,181 @@
 
 <!--        *****************DISCARD PILE*************
 
-			<textarea id="textareaEmg" style="display:none; height:70px; width:fill; border:thin solid black;" ></textarea>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="nfk_leftCol">Behov for transport?</div>
+<div class="nfk_rightCol">
+<select id="transportBehov" onchange="" placeholder="testt">
+<option value="Ingen" placeholder="test">Nej</option>
+<option value="Liggende transport">Liggende transport</option>
+<option value="Siddende transport">Siddende transport</option>
+</select>
+</div>
+<div class="nfk_rowSpacerShort"></div>
+
+
+.nfk_container .nfk_containerPadded {padding-left:2%;padding-right:2%}
+
+
+.radio-toolbar {
+margin-top: 2px;
+}
+.radio-toolbar input[type="radio"] {
+display: none;
+}
+.radio-toolbar label {
+display: inline-block;
+background-color: #ddd;
+padding: 4px 11px;
+font-family: Arial;
+font-size: 11px;
+
+}
+.radio-toolbar input[type="radio"]:checked + label {
+background-color: #404040;
+color: #F7F7F7;
+}
+
+
+
+
+
+
+.bounds {
+margin-left: 90px;
+margin-top: 10px;
+background-color: #EFEFEF;
+border-radius: 1px;
+border: 1px solid #D0D0D0;
+overflow: auto;
+float: left;
+}
+
+.bounds label {
+float: left;
+width: 3em;
+}
+
+.bounds label span {
+text-align: center;
+padding: 3px 0px;
+display: block;
+}
+
+.bounds label input {
+position: absolute;
+top: 5px;
+}
+
+.bounds input:checked + span {
+background-color: #404040;
+color: #F7F7F7;
+} 
+<div class="radio-toolbar">
+<input type="radio" id="radioradioTransport1" name="radioTransport" value="Nej" checked>
+<label for="radioradioTransport1">Nej</label>
+<input type="radio" id="radioradioTransport2" name="radioTransport" value="Siddende">
+<label for="radioradioTransport2">Siddende</label>
+<input type="radio" id="radioradioTransport3" name="radioTransport" value="Liggende">
+<label for="radioradioTransport3">Liggende</label>
+</div>
+<div style="text-align:center;margin-top:10%">
+<div class="radio-toolbar">
+<input type="radio" id="radioradioTransport1" name="radioTransport" value="Nej" checked>
+<label for="radioradioTransport1">Nej</label>
+<input type="radio" id="radioradioTransport2" name="radioTransport" value="Siddende">
+<label for="radioradioTransport2">Siddende</label>
+<input type="radio" id="radioradioTransport3" name="radioTransport" value="Liggende">
+<label for="radioradioTransport3">Liggende</label>
+</div>
+</div>
+
+
+<select id="transportBehov" onchange="">
+<option value="Vælg...">Vælg...</option>
+<option value="Ingen">Ingen</option>
+<option value="Liggende transport">Liggende transport</option>
+<option value="Siddende transport">Siddende transport</option>
+</select>
+
+<textarea id="textareaEmg" style="display:none; height:70px; width:fill; border:thin solid black;" ></textarea>
 
 <div class="esf_elementGroup" style="height:auto;min-height:40px;line-height:16px;font-family:Courier, monospace;" id="esf_resultat">Oplægget vil blive vist her, når du har udfyldt skabelonen og trykket på knappen "Generér oplæg".
-  </div>
+</div>
 
-    function emgChecked() {
-      // Get the checkbox
-      var checkbox = document.getElementById("checkboxEmg");
-      // Get the output text
-      var textarea = document.getElementById("textareaEmg");
+function emgChecked() {
+// Get the checkbox
+var checkbox = document.getElementById("checkboxEmg");
+// Get the output text
+var textarea = document.getElementById("textareaEmg");
 
-      // If the checkbox is checked, display the output text
-      if (checkbox.checked == true){
-        textarea.style.display = "block";
-      } 
-      else {
-        textarea.style.display = "none";
-      }
-    }
+// If the checkbox is checked, display the output text
+if (checkbox.checked == true){
+textarea.style.display = "block";
+} 
+else {
+textarea.style.display = "none";
+}
+}
 
-    function nfk_returnIfChecked(e, text) {
-      if ( document.getElementById(e).checked == true ) {
-        return text;
-      } else {
-        return '';
-      } 
-    }
+function returnIfChecked(e, text) {
+if ( document.getElementById(e).checked == true ) {
+return text;
+} else {
+return '';
+} 
+}
 
-    function  generatePressed() {
+function  generateResult() {
 
-      var checkboxEmg = document.getElementById("checkboxEmg");
-      var line_break = '<br />';
-      var text_generated = 'Ønskede undersøgelser:'+line_break+
-      nfk_returnIfChecked('checkboxEmg', '¨¨checkboxEmg'+line_break)+
+var checkboxEmg = document.getElementById("checkboxEmg");
+var line_break = '<br />';
+var text_generated = 'Ønskede undersøgelser:'+line_break+
+returnIfChecked('checkboxEmg', '¨¨checkboxEmg'+line_break)+
 
 
-      document.getElementById('textareaGenerated').innerHTML = text_generated;
-    }
+document.getElementById('textareaGenerated').innerHTML = text_generated;
+}
 
 style="height: 85px; border: thin solid black;" 
-    function esf_linebreak(input) {
-      var esf_lb = '<br />';
-      // Split line by line
-      var lineByLine = input.split(esf_lb);
-      // Loop through each line
-      var runs = lineByLine.length;
-      for ( i = 0; i < runs; i++ ) {
-      // Insert linebreaks
-      result = lineByLine[i].replace(esf_lb,'');
-      if ( lineByLine[i].length > 65 ) {
-        // If the line is too long then wrap it
-        result = esf_wordwrap(lineByLine[i],65,esf_lb);
-    } else if ( lineByLine[i].indexOf(": ") !== -1 ) {
-        var freeWidth = 65-lineByLine[i].length;
-        var lineSplit = lineByLine[i].split(': ');
-        var ws = esf_makeWhitespace(freeWidth);
-      if ( lineSplit[1] == ' ' ) { lineSplit[1] = '.'; }
-      result = lineSplit[0]+':.'+ws+lineSplit[1];
-    }
-    lineByLine[i] = result;
-  }
-  result = lineByLine.join(esf_lb);
-  result = result.split('¨').join('&nbsp;');
-  var esf_vl = '- - -';
-  esf_vl = esf_vl.split(' ').join('');
-  result = result.split('- - -').join(esf_vl);
-  return result;
+function esf_linebreak(input) {
+var esf_lb = '<br />';
+// Split line by line
+var lineByLine = input.split(esf_lb);
+// Loop through each line
+var runs = lineByLine.length;
+for ( i = 0; i < runs; i++ ) {
+// Insert linebreaks
+result = lineByLine[i].replace(esf_lb,'');
+if ( lineByLine[i].length > 65 ) {
+// If the line is too long then wrap it
+result = esf_wordwrap(lineByLine[i],65,esf_lb);
+} else if ( lineByLine[i].indexOf(": ") !== -1 ) {
+var freeWidth = 65-lineByLine[i].length;
+var lineSplit = lineByLine[i].split(': ');
+var ws = esf_makeWhitespace(freeWidth);
+if ( lineSplit[1] == ' ' ) { lineSplit[1] = '.'; }
+result = lineSplit[0]+':.'+ws+lineSplit[1];
+}
+lineByLine[i] = result;
+}
+result = lineByLine.join(esf_lb);
+result = result.split('¨').join('&nbsp;');
+var esf_vl = '- - -';
+esf_vl = esf_vl.split(' ').join('');
+result = result.split('- - -').join(esf_vl);
+return result;
 }
 <div class="esf_elementGroupShort esf_b">
 <label for="esf_usEEG" class="esf_elementHalf" style="width:30%;text-align:right;">EEG&nbsp;&nbsp;</label><span class="esf_elementHalf" style="width:69%;">
