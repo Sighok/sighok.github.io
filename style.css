@@ -1,0 +1,179 @@
+
+		.special{
+			display: none;
+		}
+
+		.almen{
+			display: none;
+		}
+
+		.shared{
+			display: none;
+		}
+
+		.showIf{
+			display: none;
+		}
+
+		.vSpace{
+			width:100%;
+			height: 10px;
+			overflow: hidden
+		}
+
+		.hLine{
+			width:100%;
+			height: 1px;
+			background-color:gray;
+		}
+		.outerContainer {
+			width:700px;
+			position:relative;
+			zoom:100%;
+			
+		}
+		.section{
+
+		}
+		.container {
+			width:100%;
+			background-color:#eee;
+			position:relative;
+			border:thin solid black;
+			height:auto;
+			box-sizing:content-box;
+			font-family:"Verdana";
+			font-size:11px;
+
+		}
+
+		.row{
+			width: 100%;
+		}
+
+		.row:after {
+			content: "";
+			display: table;
+			clear: both;
+		}
+
+		.column {
+			float: left;
+			padding-left:2%;
+			padding-right:2%;
+			width: 96%;
+		}
+
+		.left {
+			width: 30%;
+			padding-right:1%;
+			text-align:left;
+			font-weight:bold;
+		}
+		.left_sub {
+			width: 28%;
+			padding-right:1%;
+			margin-left:2%;
+			text-align:left;
+			font-weight:normal;
+			white-space: nowrap;
+    		overflow: hidden;
+		}
+		.left_sub:after { content: " .................................................................................." 
+		}
+
+		.left_sub2 {
+			width: 28%;
+			padding-right:1%;
+			margin-left:2%;
+			text-align:left;
+			font-weight:normal;
+			white-space: nowrap;
+    		overflow: hidden;
+		}
+
+		.right {
+			width: 64%;
+			padding-left:1%;
+			text-align:left
+		}
+
+		.mep{
+
+		}
+
+		.meg{
+
+		}
+		.mep_meg{
+			
+		}
+		.checkbox li {
+			display:block;
+			float:left;
+			position:relative;
+			left:-0%;
+			font-weight:normal;
+			width:25%;
+			text-align:left;
+			display:block;
+		}
+
+		textarea {
+			background-color:#ffffff;
+			border:1px solid black;
+			width:100%;
+			resize:none;
+			float:left;
+		}
+
+		input[type="radio"] + label:before {
+			display:block;
+			width:10%;
+			float:left;
+			position:relative;
+			font-weight:normal;
+			text-align:left
+
+		}
+
+		input[type="radio"]{
+			cursor:pointer;
+			padding-left:0px;
+			float:left;
+			margin-right:2%;
+		}
+
+		input[type="checkbox"]{
+			cursor:pointer
+		}
+
+		.title {
+			text-align:center;
+			height:50px;
+			line-height:50px;
+			font-size:20px;
+			color:white;
+			position:relative;
+			background-color:#990033
+		}
+
+		.instructions {
+			text-align:left;
+			line-height:20px;
+			color:black;
+			background-color:#DDD6C8;
+			border-bottom:thin solid black;
+			font-size:14px;
+			padding-top:10px;
+			padding-bottom:10px
+		}
+
+
+		label {
+			display:inline-block;
+			cursor:pointer;
+			position:relative;
+			padding-left:0px;
+			line-height:20px
+		} 
