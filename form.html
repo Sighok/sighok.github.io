@@ -157,8 +157,8 @@
 						</div>
 
 						<div class="column right"> 	
-							<input type="radio" name="ak" id="radioAk1" value="Ja" onclick="setDisplays()">
-							<input type="radio" name="ak" id="radioAk2" value="Nej" onclick="setDisplays()">
+							<input type="radio" name="radioAk" id="radioAk1" value="Ja" onclick="setDisplays()">
+							<input type="radio" name="radioAk" id="radioAk2" value="Nej" onclick="setDisplays()">
 							<textarea id="textareaAk" placeholder="Hvilken?" style="display:none;height:15px; width:50%;border:thin solid black"></textarea>
 						</div>
 					</div>
@@ -176,8 +176,8 @@
 						Har pt. interkranielle metalclips?
 					</div>
 					<div class="column right"> 
-						<input type="radio" name="metalInter" id="metalInter1" value="Ja">
-						<input type="radio" name="metalInter" id="metalInter2" value="Nej">
+						<input type="radio" name="radioInter" id="radioInter1" value="Ja">
+						<input type="radio" name="radioInter" id="radioInter2" value="Nej">
 					</div>
 				</div>
 				<div class="showIf row mep_meg">
@@ -185,8 +185,8 @@
 						Har pt. metal i øjne el. ører?
 					</div>
 					<div class="column right"> 
-						<input type="radio" name="metalØjne" id="metalØjne1" value="Ja">
-						<input type="radio" name="metalØjne" id="metalØjne2" value="Nej">
+						<input type="radio" name="radioØjne" id="radioØjne1" value="Ja">
+						<input type="radio" name="radioØjne" id="radioØjne2" value="Nej">
 					</div>
 				</div>
 				<div class="showIf row meg">
@@ -194,8 +194,8 @@
 						Har pt. bøjle el. metal i munden?
 					</div>
 					<div class="column right meg"> 
-						<input type="radio" name="metalBøjle" id="metalBøjle1" value="Ja">
-						<input type="radio" name="metalBøjle" id="metalBøjle2" value="Nej">
+						<input type="radio" name="radioBøjle" id="radioBøjle1" value="Ja">
+						<input type="radio" name="radioBøjle" id="radioBøjle2" value="Nej">
 					</div>
 				</div>
 				<div class="showIf row meg">
@@ -203,8 +203,8 @@
 						Har pt. metal i kroppen?
 					</div>
 					<div class="column right meg"> 
-						<input type="radio" name="metalKrop" id="metalKrop1" value="Ja">
-						<input type="radio" name="metalKrop" id="metalKrop2" value="Nej">
+						<input type="radio" name="radioKrop" id="radioKrop1" value="Ja">
+						<input type="radio" name="radioKrop" id="radioKrop2" value="Nej">
 					</div>
 				</div>
 				<div class="showIf row mep">
@@ -212,8 +212,8 @@
 						Lider pt. af epilepsi?
 					</div>
 					<div class="column right mep"> 
-						<input type="radio" name="epilepsi" id="epilepsi1" value="Ja">
-						<input type="radio" name="epilepsi" id="epilepsi2" value="Nej">
+						<input type="radio" name="radioEpilepsi" id="radioEpilepsi1" value="Ja">
+						<input type="radio" name="radioEpilepsi" id="radioEpilepsi2" value="Nej">
 					</div>
 				</div>
 				<div class="showIf row mep_meg">
@@ -221,8 +221,8 @@
 						Er pt. gravid?
 					</div>
 					<div class="column right"> 
-						<input type="radio" name="gravid" id="gravid1" value="Ja">
-						<input type="radio" name="gravid" id="gravid2" value="Nej">
+						<input type="radio" name="radioGravid" id="radioGravid1" value="Ja">
+						<input type="radio" name="radioGravid" id="radioGravid2" value="Nej">
 					</div>
 				</div>
 				<div class="showIf row" id="rowØjen">
@@ -231,14 +231,14 @@
 					</div>
 					<div class="column right">
 						<div class="checkbox">
-							<li><input type="checkbox" id="vepØjen" value="vepØjen">
-								<label for="vepØjen">VEP</label>
+							<li><input type="checkbox" id="checkboxVepØjen" value="vepØjen">
+								<label for="checkboxVepØjen">VEP</label>
 							</li>
-							<li><input type="checkbox" id="ergØjen" value="ergØjen">
-								<label for="ergØjen">ERG</label>
+							<li><input type="checkbox" id="checkboxErgØjen" value="ergØjen">
+								<label for="checkboxErgØjen">ERG</label>
 							</li>
-							<li><input type="checkbox" id="sepØjen" value="sepØjen">
-								<label for="sepØjen">SEP</label>
+							<li><input type="checkbox" id="checkboxSepØjen" value="sepØjen">
+								<label for="checkboxSepØjen">SEP</label>
 							</li>
 						</div>
 					</div>
@@ -248,7 +248,7 @@
 						Ved "Andet" oplyses:
 					</div>	
 					<div class="column right">
-						<textarea placeholder="Beskriv" style="height:15px; width:50%; border:thin solid black;"></textarea>
+						<textarea id=textareaAndet placeholder="Beskriv" style="height:15px; width:50%; border:thin solid black;"></textarea>
 					</div>
 				</div>
 			</div>
@@ -365,7 +365,7 @@
 			</div>
 
 			<div class="row" style="word-wrap: break-word;">
-				<div class="row column" id="textResult" style="height:auto;min-height:40px;line-height:16px;padding-top:5px;font-family:Courier, monospace;">
+				<div class="row column" id="textResult" style="height:auto;min-height:40px;line-height:16px;padding-top:5px; padding-bottom:5px; font-family:Courier, monospace;">
 					Oplægget vises her
 				</div>
 			</div>
@@ -376,23 +376,4 @@
 
 </body>
 </html>
-
-
-
-<!--        *****************TEMPLATES*************
-
-			<div class="row">
-				<div class="column left">
-				</div>
-
-				<div class="column right">
-				</div>
-			</div>
-		-->
-<!--        *****************DISCARD PILE*************
-
-	</div>
-
-
-
 

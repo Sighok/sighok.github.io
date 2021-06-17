@@ -26,15 +26,17 @@
 			height: 1px;
 			background-color:gray;
 		}
+		
 		.outerContainer {
 			width:700px;
 			position:relative;
 			zoom:100%;
 			
 		}
-		.section{
 
+		.section{
 		}
+
 		.container {
 			width:100%;
 			background-color:#eee;
@@ -44,7 +46,6 @@
 			box-sizing:content-box;
 			font-family:"Verdana";
 			font-size:11px;
-
 		}
 
 		.row{
@@ -70,6 +71,7 @@
 			text-align:left;
 			font-weight:bold;
 		}
+
 		.left_sub {
 			width: 28%;
 			padding-right:1%;
@@ -79,6 +81,7 @@
 			white-space: nowrap;
     		overflow: hidden;
 		}
+
 		.left_sub:after { content: " .................................................................................." 
 		}
 
@@ -99,15 +102,14 @@
 		}
 
 		.mep{
-
 		}
 
 		.meg{
+		}
 
-		}
 		.mep_meg{
-			
 		}
+
 		.checkbox li {
 			display:block;
 			float:left;
@@ -168,7 +170,6 @@
 			padding-top:10px;
 			padding-bottom:10px
 		}
-
 
 		label {
 			display:inline-block;
