@@ -4,6 +4,7 @@ function setHenviser(){
 	document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
 	document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
 	document.querySelectorAll('textarea').forEach(el => el.value = "");
+	textResult.innerHTML = "Oplægget vises her";
 	setDisplays()
     // Manage displayed content according to "henviser" selection
 	// var selectHenviser = document.getElementById("selectHenviser");
@@ -181,7 +182,7 @@ function  generateResult() {
 	var textKarpal = selectKarpal.options[selectKarpal.selectedIndex].text;
 	
 	// prints
-	var printDiagnostik = returnIfSet("textareaDiagnostisk", textareaDiagnostisk.value);
+	var printDiagnostik = returnIfSet("textareaDiagnostisk", lineBreak+textareaDiagnostisk.value);
 	var printKarpal = returnIfChecked("checkboxKarpal", lineBreak+"Karpaltunnel, "+textKarpal);
 	var printEeg = returnIfChecked("checkboxEeg", lineBreak+"EEG"); 
 	var printEmg = returnIfChecked("checkboxEmg", lineBreak+"EMG"+lineBreak
@@ -210,7 +211,7 @@ function  generateResult() {
 
 	var printIom = returnIfChecked("checkboxIom", lineBreak+"IOM");
 	var printAndet = returnIfChecked("checkboxAndet", lineBreak+"Andet: "+textareaAndet.value);
-	var printSærligeAlmen = returnIfChecked("radioSærlige1", "Ja, "+textareaSærlige.value)+returnIfChecked("radioSærlige2", "Nej");
+	var printSærligeAlmen = returnIfChecked("radioSærlige1", lineBreak+"Ja, "+textareaSærlige.value)+returnIfChecked("radioSærlige2", lineBreak+"Nej");
 
 	var printSærligeSpecial = 
 	"Akut/fast-track?: "+returnIfChecked("radioAkut1", "Ja, "+textareaAkut.value)+returnIfChecked("radioAkut2", "Nej")+lineBreak
@@ -226,13 +227,13 @@ function  generateResult() {
 		lineBreak
 
 		+"Diagnostisk spørgsmål, der ønskes besvaret:"
-		+lineBreak+printDiagnostik+lineBreak+lineBreak
+		+printDiagnostik+lineBreak+lineBreak
 
 		+"Ønskede undersøgelser:"
 		+printKarpal+printEeg+lineBreak+lineBreak
 
-		+"Særlige behov? "
-		+lineBreak+printSærligeAlmen+lineBreak+lineBreak
+		+"Særlige behov:"
+		+printSærligeAlmen+lineBreak+lineBreak
 
 		+"Anamnese og objektive fund:"
 		+printAnamnese+lineBreak
@@ -250,7 +251,7 @@ function  generateResult() {
 		+printKarpal+printEeg+printEmg+printVep+printSep+printMep+printMeg+printSøvn
 		+printØjen+printIom+printAndet+lineBreak+lineBreak	
 
-		+"Særlige behov? "
+		+"Særlige behov:"
 		+lineBreak+printSærligeSpecial+lineBreak+lineBreak
 
 		+"Anamnese og objektive fund:"
