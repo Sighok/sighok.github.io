@@ -55,7 +55,7 @@
 					<div class="hLine"></div>
 					<div class="vSpace"></div>
 					<div class="column left">
-						Diagnostisk spørgsmål, der ønskes besvaret
+						Diagnostisk spørgsmål, der ønskes besvaret *
 					</div>
 					<div class="column right">
 						<textarea id="textareaDiagnostisk" style="height:40px; width:fill; border:thin solid black;"></textarea> 
@@ -65,15 +65,39 @@
 			</div>
 
 			<!-- ØNSKEDE UNDERSØGELSER... -->
+
+
 			<div class="section">			
-				<div class="shared row">
+	
+			</div>
+
+
+			<div class="section">	
+				<div class="almen row">
+					<div class="hLine"></div>
+					<div class="vSpace"></div>
+					<div class="column left">
+						Ønskede undersøgelser *
+					</div>
+					<div class="column right checkbox"> 
+						<li>
+							<input type="radio" name="radioØnskede" id="radioKarpal" value="Karpaltunnel" onclick="setDisplays()">
+							<label for="radioKarpal">Karpaltunnel</label>
+						</li>
+						<li>
+							<input type="radio" name="radioØnskede" id="radioEeg" value="eeg" onclick="setDisplays()">
+							<label for="radioEeg">EEG</label>
+						</li>
+					</div>
+				</div>		
+				<div class="special row">
 					<div class="hLine"></div>
 					<div class="vSpace"></div>
 					<div class="column left">
 						Ønskede undersøgelser
 					</div>
 					<div class="column right checkbox">
-						<div class="shared">
+						<div class="special">
 							<li>
 								<input type="checkbox" id="checkboxKarpal" value="karpal" onclick="setDisplays()">
 								<label for="checkboxKarpal">Karpaltunnel</label>
@@ -82,8 +106,6 @@
 								<input type="checkbox" id="checkboxEeg" value="eeg" onclick="setDisplays()">
 								<label for="checkboxEeg">EEG</label>
 							</li>
-						</div>
-						<div class="special">
 							<li>
 								<input type="checkbox" id="checkboxEmg" value="emg" onclick="setDisplays()">
 								<label for="checkboxEmg">EMG/ENG</label>
@@ -348,6 +370,9 @@
 					<input type="button" onclick="generateResult()" value="Generér oplæg" style="border: thin solid black; float:right; margin-right:1%;padding:2px;font-weight: normal;background-color:white ; padding-left: 3%;padding-right: 3%">
 					<div class="vSpace"></div>
 				</div>
+				<div class="shared row column" id=textErrors style="text-align:right; color:red">
+				</div>
+				<div class='clear'></div>
 			</div>
 		</div>						
 	</div>

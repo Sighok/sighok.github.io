@@ -4,6 +4,7 @@ function setHenviser(){
 	document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
 	document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
 	document.querySelectorAll('textarea').forEach(el => el.value = "");
+	selectKarpal.value = "intet";
 	textResult.innerHTML = "Oplægget vises her";
 	setDisplays()
     // Manage displayed content according to "henviser" selection
@@ -54,7 +55,7 @@ function setDisplays(){
 
 
 	// checkboxes
-	if (checkboxKarpal.checked == true){
+	if (checkboxKarpal.checked == true || radioKarpal.checked == true){
 		rowKarpal.style.display = "block";
 	} 
 	else {
@@ -176,13 +177,55 @@ function returnIfSet(e, text) {
 	}
 }
 
+function errorCheck(){
+	var lineBreak = "<br/>";
+	var error1 = 0;
+	var error2 = 0;
+	var error3 = 0;
+	var errorCount = 0;
+	var printError1 = "";
+	var printError2 = "";
+	var printError3 = "";
+	var outPlaceholder = "Oplægget vises her";
+
+	textResult.innerHTML = outPlaceholder;
+	textErrors.innerHTML = ""
+
+	if (selectHenviser.value == "almen"){
+		if (radioKarpal.checked == false && radioEeg.checked == false) {
+			printError1 = "* Udfyld [Ønskede undersøgelser]"; 
+			error1 = 1;
+		}
+		if (textareaDiagnostisk.value.length == 0 ){
+			printError2 = lineBreak+"* Udfyld [Diagnostisk spørgsmål, der ønskes besvaret]"; 
+			error2 = 1;
+		}
+	}
+
+	if (radioKarpal.checked == true && selectKarpal.value == "intet"){
+		printError3 = lineBreak+"* Udfyld [Ved Karpaltunnel oplyses]"; 
+		error3 = 1;
+	}
+
+	errorCount = error1+error2+error3;
+	if (errorCount > 0){
+		textErrors.innerHTML = printError1+printError2+printError3;
+	}
+
+	return errorCount;
+	
+}
+
 function  generateResult() {
+
 	var lineBreak = "<br/>";
 	var tab = "&nbsp &nbsp";
 	var textKarpal = selectKarpal.options[selectKarpal.selectedIndex].text;
 	
 	// prints
 	var printDiagnostik = returnIfSet("textareaDiagnostisk", lineBreak+textareaDiagnostisk.value);
+	var printKarpalAlmen = returnIfChecked("radioKarpal", lineBreak+"Karpaltunnel, "+textKarpal);
+	var printEegAlmen = returnIfChecked("radioEeg", lineBreak+"EEG"); 
 	var printKarpal = returnIfChecked("checkboxKarpal", lineBreak+"Karpaltunnel, "+textKarpal);
 	var printEeg = returnIfChecked("checkboxEeg", lineBreak+"EEG"); 
 	var printEmg = returnIfChecked("checkboxEmg", lineBreak+"EMG"+lineBreak
@@ -215,55 +258,68 @@ function  generateResult() {
 
 	var printSærligeSpecial = 
 	"Akut/fast-track?: "+returnIfChecked("radioAkut1", "Ja, "+textareaAkut.value)+returnIfChecked("radioAkut2", "Nej")+lineBreak
-	+"Behov for tolk: "+returnIfChecked("radioTolk1", "Ja "+textareaTolk.value)+returnIfChecked("radioTolk2", "Nej")+lineBreak
-	+"Andre behov?: "+returnIfChecked("radioAndre1", "Ja "+textareaAndre.value)+returnIfChecked("radioAndre2", "Nej");
+	+"Behov for tolk: "+returnIfChecked("radioTolk1", "Ja, "+textareaTolk.value)+returnIfChecked("radioTolk2", "Nej")+lineBreak
+	+"Andre behov?: "+returnIfChecked("radioAndre1", "Ja, "+textareaAndre.value)+returnIfChecked("radioAndre2", "Nej");
 	
 	var printAnamnese = returnIfSet("textareaAnamnese", lineBreak+textareaAnamnese.value);
+	var outPlaceholder = "Oplægget vises her";
 	var printOut = "";
 
-	if (selectHenviser.value == "almen"){
-		printOut = 
 
-		lineBreak
+	var errorState = errorCheck();
+	console.log(errorState);
 
-		+"Diagnostisk spørgsmål, der ønskes besvaret:"
-		+printDiagnostik+lineBreak+lineBreak
+	if (errorState == 0){
+		if (selectHenviser.value == "almen"){
+			printOut = 
 
-		+"Ønskede undersøgelser:"
-		+printKarpal+printEeg+lineBreak+lineBreak
+			lineBreak
 
-		+"Særlige behov:"
-		+printSærligeAlmen+lineBreak+lineBreak
+			+"Diagnostisk spørgsmål, der ønskes besvaret:"
+			+printDiagnostik+lineBreak+lineBreak
 
-		+"Anamnese og objektive fund:"
-		+printAnamnese+lineBreak
+			+"Ønskede undersøgelser:"
+			+printKarpalAlmen+printEegAlmen+lineBreak+lineBreak
 
-		+lineBreak
-		;
+			+"Særlige behov:"
+			+printSærligeAlmen+lineBreak+lineBreak
+
+			+"Anamnese og objektive fund:"
+			+printAnamnese+lineBreak
+
+			+lineBreak
+			;
+		}
+
+		if (selectHenviser.value == "special"){
+			printOut = 
+
+			lineBreak
+
+			+"Ønskede undersøgelser:"
+			+printKarpal+printEeg+printEmg+printVep+printSep+printMep+printMeg+printSøvn
+			+printØjen+printIom+printAndet+lineBreak+lineBreak	
+
+			+"Særlige behov:"
+			+lineBreak+printSærligeSpecial+lineBreak+lineBreak
+
+			+"Anamnese og objektive fund:"
+			+printAnamnese+lineBreak
+
+			+lineBreak
+			;
+		}
+		textResult.innerHTML = printOut;
+		selectElementContents(textResult);
 	}
-
-	if (selectHenviser.value == "special"){
-		printOut = 
-
-		lineBreak
-
-		+"Ønskede undersøgelser:"
-		+printKarpal+printEeg+printEmg+printVep+printSep+printMep+printMeg+printSøvn
-		+printØjen+printIom+printAndet+lineBreak+lineBreak	
-
-		+"Særlige behov:"
-		+lineBreak+printSærligeSpecial+lineBreak+lineBreak
-
-		+"Anamnese og objektive fund:"
-		+printAnamnese+lineBreak
-
-		+lineBreak
-		;
-	}
-
-	textResult.innerHTML = printOut;
-	selectElementContents(textResult);
 }
+
+// function checkRequired(){
+// 	if (radioKarpaltunnel.checked == true) {
+// 		textErrors.innerHTML = "ERROR";
+
+// 	}
+// }
 
 function selectElementContents(e) {
 	var doc = document, text = e, range, selection;    
