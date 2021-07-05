@@ -183,9 +183,9 @@ function errorCheck(){
 	var error2 = 0;
 	var error3 = 0;
 	var errorCount = 0;
-	var printError1 = "";
-	var printError2 = "";
-	var printError3 = "";
+	// var printError1 = "";
+	// var printError2 = "";
+	// var printError3 = "";
 	var outPlaceholder = "Oplægget vises her";
 
 	textResult.innerHTML = outPlaceholder;
@@ -193,23 +193,43 @@ function errorCheck(){
 
 	if (selectHenviser.value == "almen"){
 		if (radioKarpal.checked == false && radioEeg.checked == false) {
-			printError1 = "* Udfyld [Ønskede undersøgelser]"; 
+			// printError1 = "* Udfyld [Ønskede undersøgelser]"; 
+			rowØnskedeAlmen.style.color = "red";
 			error1 = 1;
 		}
+		else{
+			rowØnskedeAlmen.style.color = "black";
+			error1 = 0;
+		}
+
 		if (textareaDiagnostisk.value.length == 0 ){
-			printError2 = lineBreak+"* Udfyld [Diagnostisk spørgsmål, der ønskes besvaret]"; 
+			// printError2 = lineBreak+"* Udfyld [Diagnostisk spørgsmål, der ønskes besvaret]"; 
+			rowDiagnostisk.style.color = "red";
+			textareaDiagnostisk.style.border = "thin solid red";
 			error2 = 1;
+		}		
+		else{
+			rowDiagnostisk.style.color = "black";
+			textareaDiagnostisk.style.border = "thin solid black";
+			error2 = 0;
 		}
 	}
 
 	if (radioKarpal.checked == true && selectKarpal.value == "intet"){
-		printError3 = lineBreak+"* Udfyld [Ved Karpaltunnel oplyses]"; 
+		// printError3 = lineBreak+"* Udfyld [Ved Karpaltunnel oplyses]";
+		rowKarpal.style.color = "red"; 
+		selectKarpal.style.color = "red";
 		error3 = 1;
+	}
+	else{
+		rowKarpal.style.color = "black"; 
+		selectKarpal.style.color = "black";
+		error3 = 0;
 	}
 
 	errorCount = error1+error2+error3;
 	if (errorCount > 0){
-		textErrors.innerHTML = printError1+printError2+printError3;
+		textErrors.innerHTML = "Udfyld de røde felter";
 	}
 
 	return errorCount;
@@ -310,7 +330,7 @@ function  generateResult() {
 			;
 		}
 		textResult.innerHTML = printOut;
-		selectElementContents(textResult);
+		markAndCopyResult(textResult);
 	}
 }
 
@@ -321,7 +341,7 @@ function  generateResult() {
 // 	}
 // }
 
-function selectElementContents(e) {
+function markAndCopyResult(e) {
 	var doc = document, text = e, range, selection;    
 	if (doc.body.createTextRange) { //ms
 		range = doc.body.createTextRange();
@@ -335,6 +355,8 @@ function selectElementContents(e) {
 		selection.removeAllRanges();
 		selection.addRange(range);
 	}
+   document.execCommand('copy');
+
 }
 
 // var checkboxKarpal = document.getElementById("checkboxKarpal");
