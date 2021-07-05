@@ -17,7 +17,7 @@
 
 		.vSpace{
 			width:100%;
-			height: 10px;
+			height: 15px;
 			overflow: hidden
 		}
 
@@ -25,6 +25,7 @@
 			width:100%;
 			height: 1px;
 			background-color:gray;
+			display:block;
 		}
 
 		.clear{
@@ -32,7 +33,7 @@
 			clear: both; 
 			height: 0px; 
 			line-height:0px;
-			padding-bottom:10px;
+			padding-bottom:20px;
 		}
 		.outerContainer {
 			width:700px;
@@ -41,6 +42,8 @@
 		}
 
 		.section{
+/*			padding-left:5%;
+			padding-right:5%;*/
 		}
 
 		.container {
@@ -66,20 +69,24 @@
 
 		.column {
 			float: left;
-			padding-left:2%;
-			padding-right:2%;
-			width: 96%;
+			padding-left:4%;
+			padding-right:4%;			
+			width: 92%;
 		}
-
+		.right {
+			width: 62%;
+			padding-left:1%;
+			text-align:left
+		}
 		.left {
-			width: 30%;
+			width: 28%;
 			padding-right:1%;
 			text-align:left;
 			font-weight:bold;
 		}
 
 		.left_sub {
-			width: 28%;
+			width: 26%;
 			padding-right:1%;
 			margin-left:2%;
 			text-align:left;
@@ -92,7 +99,7 @@
 		}
 
 		.left_sub2 {
-			width: 28%;
+			width: 26%;
 			padding-right:1%;
 			margin-left:2%;
 			text-align:left;
@@ -101,11 +108,7 @@
     		overflow: hidden;
 		}
 
-		.right {
-			width: 64%;
-			padding-left:1%;
-			text-align:left
-		}
+
 
 		.mep{
 		}
@@ -157,7 +160,8 @@
 		}
 
 		.title {
-			text-align:center;
+			text-align:left;
+			padding-left:4%;
 			height:50px;
 			line-height:50px;
 			font-size:20px;
@@ -174,7 +178,8 @@
 			border-bottom:thin solid black;
 			font-size:14px;
 			padding-top:10px;
-			padding-bottom:10px
+			padding-bottom:10px;
+
 		}
 
 		label {

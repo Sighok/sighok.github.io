@@ -27,13 +27,14 @@
 				<img src="Region-Midt-logo.jpeg" style="height:45px; float:right; padding-top:5px">
 			</div>
 			<div class="instructions column">
-				1. Udfyld nedenstående felter og tryk på knappen "Generér oplæg"<br>
-				2. Kopier oplægget over i den elektroniske henvisning (EPJ)
+				1. Udfyld og tryk "Generér oplæg"<br>
+				2. Oplægget kopieres automatisk til computerens udklipsholder<br>
+				3. Indsæt oplægget i den elektroniske henvisning (Ctrl-V)
 			</div>
 
 			<!-- HENVISER... -->
 			<div class="section">
-				<div class="row">
+				<div class="row" id="rowHenviser">
 					<div class="vSpace"></div>
 					<div class="column left">
 						Henviser
@@ -55,7 +56,7 @@
 					<div class="hLine"></div>
 					<div class="vSpace"></div>
 					<div class="column left">
-						Diagnostisk spørgsmål, der ønskes besvaret *
+						Diagnostisk spørgsmål, der ønskes besvaret
 					</div>
 					<div class="column right">
 						<textarea id="textareaDiagnostisk" style="height:40px; width:fill; border:thin solid black;"></textarea> 
@@ -77,7 +78,7 @@
 					<div class="hLine"></div>
 					<div class="vSpace"></div>
 					<div class="column left">
-						Ønskede undersøgelser *
+						Ønskede undersøgelser
 					</div>
 					<div class="column right checkbox"> 
 						<li>
@@ -357,7 +358,7 @@
 						Anamnese og objektive fund. <br> Kopier forundersøgelse eller andet oplæg fra journalen ind her.
 					</div>
 					<div class="column right">
-						<textarea id="textareaAnamnese" style="display:block; height:120px; width:fill; border:thin solid black;"></textarea> 
+						<textarea id="textareaAnamnese" style="display:block; height:120px; width:99%; border:thin solid black;"></textarea> 
 					</div>
 					<div class="vSpace"></div>
 				</div>
@@ -365,14 +366,15 @@
 
 			<!-- GENERÉR OPLÆG... -->
 			<div class="section">
-				<div class="shared row">
-					<div class="vSpace"></div>
-					<input type="button" onclick="generateResult()" value="Generér oplæg" style="border: thin solid black; float:right; margin-right:1%;padding:2px;font-weight: normal;background-color:white ; padding-left: 3%;padding-right: 3%">
-					<div class="vSpace"></div>
+				<div class="vSpace"></div>
+				<div class="row column" id=textGenerer style="font-size:12px; position:absolute; bottom:45px; font-weight:normal; text-align:right; padding-right:3%;">
 				</div>
-				<div class="shared row column" id=textErrors style="text-align:right; color:red">
+				<div class="vSpace"></div>
+				<div class="vSpace"></div>
+				<div class="row">
+					<input type="button" onclick="generateResult()" value="Generér oplæg" style="font-family:Verdana;font-size:12px;font-weight:normal; position:absolute; right:2%; bottom:0px; border: thin solid black; background-color:white; padding:5px; padding-left:5%;padding-right:5%; margin-right:13px; margin-bottom:15px;">
 				</div>
-				<div class='clear'></div>
+				<div class="vSpace"></div>	
 			</div>
 		</div>						
 	</div>
@@ -385,7 +387,7 @@
 			<div class="title">
 				Resultat
 			</div>
-			<div class="instructions column">
+			<div class="instructions column" style="display:none">
 				Teksten kopieres over i den elektroniske henvisning (EPJ)
 			</div>
 

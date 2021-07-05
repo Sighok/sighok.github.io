@@ -6,6 +6,7 @@ function setHenviser(){
 	document.querySelectorAll('textarea').forEach(el => el.value = "");
 	selectKarpal.value = "intet";
 	textResult.innerHTML = "Oplægget vises her";
+	errorReset();
 	setDisplays()
     // Manage displayed content according to "henviser" selection
 	// var selectHenviser = document.getElementById("selectHenviser");
@@ -177,66 +178,60 @@ function returnIfSet(e, text) {
 	}
 }
 
+function errorReset(){
+	textResult.innerHTML = "Oplægget vises her";
+	rowØnskedeAlmen.style.color = "black";
+	rowDiagnostisk.style.color = "black";
+	textareaDiagnostisk.style.border = "thin solid black";
+	rowKarpal.style.color = "black"; 
+	selectKarpal.style.color = "black";
+	textGenerer.innerHTML = "";
+	textGenerer.style.color = "black";
+	rowHenviser.style.color = "black"; 
+	selectHenviser.style.color = "black";
+
+}
 function errorCheck(){
-	var lineBreak = "<br/>";
+	errorReset();
+
 	var error1 = 0;
 	var error2 = 0;
 	var error3 = 0;
+	var error4 = 0;
 	var errorCount = 0;
-	// var printError1 = "";
-	// var printError2 = "";
-	// var printError3 = "";
-	var outPlaceholder = "Oplægget vises her";
 
-	textResult.innerHTML = outPlaceholder;
-	textErrors.innerHTML = ""
 
 	if (selectHenviser.value == "almen"){
 		if (radioKarpal.checked == false && radioEeg.checked == false) {
-			// printError1 = "* Udfyld [Ønskede undersøgelser]"; 
 			rowØnskedeAlmen.style.color = "red";
 			error1 = 1;
 		}
-		else{
-			rowØnskedeAlmen.style.color = "black";
-			error1 = 0;
-		}
 
 		if (textareaDiagnostisk.value.length == 0 ){
-			// printError2 = lineBreak+"* Udfyld [Diagnostisk spørgsmål, der ønskes besvaret]"; 
 			rowDiagnostisk.style.color = "red";
 			textareaDiagnostisk.style.border = "thin solid red";
 			error2 = 1;
 		}		
-		else{
-			rowDiagnostisk.style.color = "black";
-			textareaDiagnostisk.style.border = "thin solid black";
-			error2 = 0;
-		}
 	}
 
 	if (radioKarpal.checked == true && selectKarpal.value == "intet"){
-		// printError3 = lineBreak+"* Udfyld [Ved Karpaltunnel oplyses]";
 		rowKarpal.style.color = "red"; 
 		selectKarpal.style.color = "red";
 		error3 = 1;
 	}
-	else{
-		rowKarpal.style.color = "black"; 
-		selectKarpal.style.color = "black";
-		error3 = 0;
-	}
 
-	errorCount = error1+error2+error3;
-	if (errorCount > 0){
-		textErrors.innerHTML = "Udfyld de røde felter";
+	if (selectHenviser.value == "intet"){
+		rowHenviser.style.color = "red"; 
+		selectHenviser.style.color = "red";
+		error4 = 1;
 	}
+	errorCount = error1+error2+error3+error4;
 
 	return errorCount;
 	
 }
 
-function  generateResult() {
+function generateResult() {
 
 	var lineBreak = "<br/>";
 	var tab = "&nbsp &nbsp";
@@ -290,6 +285,7 @@ function  generateResult() {
 	console.log(errorState);
 
 	if (errorState == 0){
+		textGenerer.innerHTML = "Teksten er nu kopieret til udklipsholderen &#10004";
 		if (selectHenviser.value == "almen"){
 			printOut = 
 
@@ -332,11 +328,16 @@ function  generateResult() {
 		textResult.innerHTML = printOut;
 		markAndCopyResult(textResult);
 	}
+	if (errorState > 0){
+		textGenerer.style.color = "red";
+		textGenerer.innerHTML = "Udfyld de røde felter";
+		console.log("error")
+	}
 }
 
 // function checkRequired(){
 // 	if (radioKarpaltunnel.checked == true) {
-// 		textErrors.innerHTML = "ERROR";
+// 		textGenerer.innerHTML = "ERROR";
 
 // 	}
 // }
