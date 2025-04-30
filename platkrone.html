@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <title>Plat eller Krone</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    button {
+      font-size: 20px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    #resultat {
+      margin-top: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    #moent {
+      margin-top: 20px;
+      max-width: 200px;
+    }
+    #graf-container {
+      max-width: 400px;
+      margin: 40px auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Slå Plat eller Krone</h1>
+  <button onclick="slaPlatEllerKrone()">Slå</button>
+  <div id="resultat"></div>
+  <img id="moent" src="" alt="Møntbillede" hidden>
+  
+  <div id="graf-container">
+    <canvas id="graf"></canvas>
+  </div>
+
+  <script>
+    let antalPlat = 0;
+    let antalKrone = 0;
+
+    const ctx = document.getElementById('graf').getContext('2d');
+    const graf = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Plat', 'Krone'],
+        datasets: [{
+          label: 'Antal slag',
+          data: [antalPlat, antalKrone],
+          backgroundColor: ['#3498db', '#f1c40f']
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            precision: 0
+          }
+        }
+      }
+    });
+
+    function slaPlatEllerKrone() {
+      const udfald = Math.random() < 0.5 ? "Plat" : "Krone";
+      const billedeSrc = udfald === "Plat" ? "plat.png" : "krone.png";
+
+      document.getElementById("resultat").textContent = "Resultat: " + udfald;
+      const moentBillede = document.getElementById("moent");
+      moentBillede.src = billedeSrc;
+      moentBillede.hidden = false;
+
+      if (udfald === "Plat") {
+        antalPlat++;
+      } else {
+        antalKrone++;
+      }
+
+      // Opdater graf
+      graf.data.datasets[0].data = [antalPlat, antalKrone];
+      graf.update();
+    }
+  </script>
+</body>
+</html>
