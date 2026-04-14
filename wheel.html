@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wheel Spinner</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0e17;
+    --surface: #1a1928;
+    --border: #2e2d45;
+    --accent: #ff6b35;
+    --accent2: #ffd23f;
+    --text: #fffffe;
+    --muted: #a7a9be;
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(255,107,53,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(255,210,63,0.06) 0%, transparent 60%);
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    letter-spacing: 0.06em;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 300;
+    margin-bottom: 28px;
+  }
+
+  /* Upload zone */
+  .upload-zone {
+    width: 100%;
+    max-width: 900px;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    margin-bottom: 32px;
+    background: var(--surface);
+  }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(255,107,53,0.05);
+  }
+  .upload-zone input { display: none; }
+  .upload-zone .upload-icon { font-size: 2.4rem; margin-bottom: 8px; }
+  .upload-zone p { color: var(--muted); font-size: 0.88rem; }
+  .upload-zone strong { color: var(--text); }
+  .upload-zone .hint {
+    margin-top: 10px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    opacity: 0.7;
+  }
+
+  /* Manual entry */
+  .manual-entry {
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .manual-entry textarea {
+    flex: 1;
+    min-width: 200px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    padding: 10px 14px;
+    resize: vertical;
+    min-height: 70px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .manual-entry textarea:focus { border-color: var(--accent); }
+  .manual-entry textarea::placeholder { color: var(--muted); }
+  .btn {
+    background: linear-gradient(135deg, var(--accent), #e5521f);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 22px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn.secondary {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+  }
+  .btn.secondary:hover { border-color: var(--accent); color: var(--text); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* Main layout */
+  .main {
+    display: flex;
+    gap: 36px;
+    width: 100%;
+    max-width: 900px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  /* Wheel area */
+  .wheel-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    flex: 0 0 auto;
+  }
+
+  .wheel-wrapper {
+    position: relative;
+    width: 380px;
+    height: 380px;
+  }
+  @media (max-width: 500px) {
+    .wheel-wrapper { width: 300px; height: 300px; }
+  }
+
+  /* Pointer */
+  .pointer {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 36px solid var(--accent);
+    filter: drop-shadow(0 3px 6px rgba(255,107,53,0.6));
+    z-index: 10;
+  }
+
+  canvas#wheel {
+    display: block;
+    border-radius: 50%;
+    box-shadow:
+      0 0 0 4px var(--border),
+      0 0 60px rgba(255,107,53,0.2),
+      0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .center-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--accent), #e5521f);
+    border-radius: 50%;
+    border: 4px solid var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: white;
+    z-index: 10;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(255,107,53,0.5);
+  }
+  .center-btn:hover { transform: translate(-50%, -50%) scale(1.08); box-shadow: 0 6px 24px rgba(255,107,53,0.7); }
+  .center-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: translate(-50%, -50%); }
+
+  .spin-btn {
+    width: 100%;
+    max-width: 380px;
+    padding: 14px;
+    font-size: 1.4rem;
+  }
+
+  /* Result display */
+  .result-box {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.3s;
+    width: 100%;
+    max-width: 380px;
+  }
+  .result-box.has-result { border-color: var(--accent); }
+  .result-box .result-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .result-box .result-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.9rem;
+    letter-spacing: 0.05em;
+    color: var(--accent2);
+    word-break: break-word;
+  }
+
+  /* Right panel */
+  .right-panel {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .panel-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+  }
+
+  .panel-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .panel-title span { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; }
+
+  /* Items list */
+  .items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .item-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid transparent;
+    transition: border-color 0.15s;
+    animation: fadeIn 0.2s ease;
+  }
+  .item-chip:hover { border-color: var(--border); }
+  .item-color {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .item-chip button {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0 2px;
+    line-height: 1;
+    transition: color 0.1s;
+  }
+  .item-chip button:hover { color: var(--accent); }
+
+  /* History list */
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 250px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .history-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    animation: slideIn 0.25s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(12px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .history-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: var(--muted);
+    min-width: 20px;
+  }
+  .history-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .history-name {
+    font-size: 0.88rem;
+    font-weight: 500;
+    flex: 1;
+    word-break: break-word;
+  }
+  .history-time {
+    font-size: 0.72rem;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .empty-state {
+    color: var(--muted);
+    font-size: 0.82rem;
+    text-align: center;
+    padding: 16px 0;
+    opacity: 0.6;
+  }
+
+  .no-wheel-msg {
+    color: var(--muted);
+    font-size: 0.88rem;
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  /* Confetti burst */
+  .confetti-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 100;
+    overflow: hidden;
+  }
+  .confetti-piece {
+    position: absolute;
+    width: 8px; height: 8px;
+    opacity: 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>🎡 Wheel Spinner</h1>
+<p class="subtitle">Load items from a .txt or .xlsx file — one item per line</p>
+
+<!-- Upload zone -->
+<div class="upload-zone" id="uploadZone">
+  <input type="file" id="fileInput" accept=".txt,.csv,.xlsx,.xls">
+  <div class="upload-icon">📂</div>
+  <p><strong>Drop a file here</strong> or click to browse</p>
+  <p class="hint">.txt or .csv — one item per line &nbsp;|&nbsp; .xlsx — first column, first sheet</p>
+</div>
+
+<!-- Manual entry -->
+<div class="manual-entry">
+  <textarea id="manualInput" placeholder="Or type items manually — one per line&#10;Item A&#10;Item B&#10;Item C"></textarea>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <button class="btn" onclick="loadManual()">LOAD</button>
+    <button class="btn secondary" onclick="clearAll()">Clear</button>
+  </div>
+</div>
+
+<!-- Main layout -->
+<div class="main" id="mainArea" style="display:none">
+  <!-- Wheel -->
+  <div class="wheel-area">
+    <div class="wheel-wrapper">
+      <div class="pointer"></div>
+      <canvas id="wheel" width="380" height="380"></canvas>
+      <button class="center-btn" id="centerBtn" onclick="spinWheel()">SPIN</button>
+    </div>
+    <button class="btn spin-btn" id="spinBtn" onclick="spinWheel()">🎲 SPIN THE WHEEL</button>
+    <div class="result-box" id="resultBox">
+      <div class="result-label">Waiting for spin…</div>
+    </div>
+  </div>
+
+  <!-- Right panel -->
+  <div class="right-panel">
+    <div class="panel-card">
+      <div class="panel-title">
+        ITEMS ON WHEEL
+        <span id="itemCount">0 items</span>
+      </div>
+      <div class="items-list" id="itemsList"></div>
+    </div>
+    <div class="panel-card">
+      <div class="panel-title">
+        SPIN HISTORY
+        <button class="btn secondary" onclick="clearHistory()" style="padding:4px 10px;font-size:0.72rem">Clear</button>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="empty-state">No spins yet</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ── State ──────────────────────────────────────────────────────────
+let items = [];
+let isSpinning = false;
+let currentAngle = 0;
+let spinHistory = [];
+let spinCount = 0;
+
+const COLORS = [
+  '#ff6b35','#ffd23f','#06d6a0','#118ab2','#ef476f',
+  '#a8dadc','#f4a261','#e9c46a','#2a9d8f','#e76f51',
+  '#457b9d','#a8c5da','#f7b2bd','#c77dff','#48cae4',
+  '#b5e48c','#ff9f1c','#cbf3f0','#ffbf69','#9bf6ff',
+];
+
+// ── File loading ───────────────────────────────────────────────────
+const uploadZone = document.getElementById('uploadZone');
+const fileInput  = document.getElementById('fileInput');
+
+uploadZone.addEventListener('click', () => fileInput.click());
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+
+function handleFile(file) {
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (ext === 'xlsx' || ext === 'xls') {
+    readXlsx(file);
+  } else {
+    // txt / csv
+    const reader = new FileReader();
+    reader.onload = e => {
+      const lines = e.target.result.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      setItems(lines);
+    };
+    reader.readAsText(file, 'UTF-8');
+  }
+}
+
+function readXlsx(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+    const lines = data.map(row => String(row[0] || '').trim()).filter(Boolean);
+    setItems(lines);
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function loadManual() {
+  const raw = document.getElementById('manualInput').value;
+  const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  if (lines.length < 2) { alert('Please enter at least 2 items.'); return; }
+  setItems(lines);
+}
+
+function setItems(newItems) {
+  if (newItems.length < 2) { alert('Need at least 2 items!'); return; }
+  items = newItems.slice(0, 64); // cap at 64
+  renderItemsList();
+  drawWheel(currentAngle);
+  document.getElementById('mainArea').style.display = 'flex';
+}
+
+function clearAll() {
+  items = [];
+  spinHistory = [];
+  spinCount = 0;
+  document.getElementById('mainArea').style.display = 'none';
+  document.getElementById('manualInput').value = '';
+  document.getElementById('resultBox').innerHTML = '<div class="result-label">Waiting for spin…</div>';
+  renderHistoryList();
+}
+
+// ── Wheel drawing ──────────────────────────────────────────────────
+const canvas = document.getElementById('wheel');
+const ctx    = canvas.getContext('2d');
+
+function drawWheel(angle) {
+  const n = items.length;
+  if (n === 0) return;
+  const size = canvas.width;
+  const cx = size / 2, cy = size / 2, r = size / 2 - 4;
+  const arc = (2 * Math.PI) / n;
+  ctx.clearRect(0, 0, size, size);
+
+  for (let i = 0; i < n; i++) {
+    const start = angle + i * arc - Math.PI / 2;
+    const end   = start + arc;
+    const color = COLORS[i % COLORS.length];
+
+    // Segment
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, start, end);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Text
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(start + arc / 2);
+    ctx.textAlign = 'right';
+    const maxLen = Math.max(6, Math.floor(24 / Math.max(1, n / 8)));
+    let label = items[i];
+    if (label.length > maxLen) label = label.slice(0, maxLen - 1) + '…';
+    const fontSize = Math.max(9, Math.min(16, Math.floor(r * 0.18 * (8 / Math.max(n, 8)))));
+    ctx.font = `600 ${fontSize}px 'DM Sans', sans-serif`;
+    ctx.fillStyle = brightness(color) > 160 ? '#1a1928' : '#ffffff';
+    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+    ctx.shadowBlur = 3;
+    ctx.fillText(label, r - 10, fontSize / 3);
+    ctx.restore();
+  }
+
+  // Center circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+  ctx.fillStyle = '#0f0e17';
+  ctx.fill();
+  ctx.strokeStyle = '#2e2d45';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+function brightness(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return (r * 299 + g * 587 + b * 114) / 1000;
+}
+
+// ── Spin logic ─────────────────────────────────────────────────────
+function spinWheel() {
+  if (isSpinning || items.length === 0) return;
+  isSpinning = true;
+  document.getElementById('spinBtn').disabled = true;
+  document.getElementById('centerBtn').disabled = true;
+
+  const extraSpins = 5 + Math.random() * 5;
+  const randomAngle = Math.random() * Math.PI * 2;
+  const totalRotation = extraSpins * Math.PI * 2 + randomAngle;
+  const duration = 3500 + Math.random() * 1500;
+  const startAngle = currentAngle;
+  const startTime = performance.now();
+
+  function easeOut(t) {
+    return 1 - Math.pow(1 - t, 4);
+  }
+
+  function animate(now) {
+    const elapsed = now - startTime;
+    const t = Math.min(elapsed / duration, 1);
+    const easedT = easeOut(t);
+    currentAngle = startAngle + totalRotation * easedT;
+    drawWheel(currentAngle);
+
+    if (t < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      currentAngle = currentAngle % (Math.PI * 2);
+      isSpinning = false;
+      document.getElementById('spinBtn').disabled = false;
+      document.getElementById('centerBtn').disabled = false;
+      announceResult();
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+function announceResult() {
+  const n = items.length;
+  const arc = (2 * Math.PI) / n;
+  // Pointer is at top (-π/2 from 0). Find which segment is at pointer.
+  // After drawing, segment i starts at: currentAngle + i*arc - π/2
+  // We need the segment whose range contains angle 0 (top of canvas = -π/2 absolute)
+  // Effective pointer angle (in wheel frame): -currentAngle + π/2 (mod 2π) but simpler:
+  // Pointer is at canvas top = angle -π/2 from East = 0 + ... let's think:
+  // Segment i spans [currentAngle - π/2 + i*arc, currentAngle - π/2 + (i+1)*arc]
+  // Pointer is at angle = -π/2 (12 o'clock) in absolute = 3π/2
+  // We need: (3π/2 - currentAngle + π/2) / arc mod n = (-currentAngle + 2π) / arc mod n
+  let pointerAngle = ((-currentAngle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+  let idx = Math.floor(pointerAngle / arc) % n;
+  // Correct for the -π/2 offset in drawing start
+  // Segments are drawn starting at -π/2, so adjust:
+  // pointer at top = angle 0 in (angle - π/2) space → angle = π/2 in drawing space?
+  // Actually let me re-derive:
+  // Segment i is drawn: start = angle + i*arc - π/2
+  // Pointer at top = -π/2 absolute
+  // Segment at pointer: find i where (angle + i*arc - π/2) ≤ -π/2 < (angle + (i+1)*arc - π/2)
+  // → angle + i*arc ≤ 0 < angle + (i+1)*arc
+  // → -angle ∈ [i*arc, (i+1)*arc)
+  // → i = floor((-angle % 2π) / arc)
+  let normAngle = ((-currentAngle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+  idx = Math.floor(normAngle / arc) % n;
+  const winner = items[idx];
+  const color = COLORS[idx % COLORS.length];
+
+  // Show result
+  const box = document.getElementById('resultBox');
+  box.classList.add('has-result');
+  box.innerHTML = `<div class="result-label">🏆 Result</div><div class="result-value" style="color:${color}">${winner}</div>`;
+
+  // History
+  spinCount++;
+  spinHistory.unshift({ num: spinCount, name: winner, color, time: new Date().toLocaleTimeString() });
+  renderHistoryList();
+
+  // Confetti
+  launchConfetti(color);
+}
+
+// ── Items list render ──────────────────────────────────────────────
+function renderItemsList() {
+  const el = document.getElementById('itemsList');
+  document.getElementById('itemCount').textContent = `${items.length} item${items.length !== 1 ? 's' : ''}`;
+  el.innerHTML = items.map((item, i) => `
+    <div class="item-chip">
+      <div class="item-color" style="background:${COLORS[i % COLORS.length]}"></div>
+      <span>${item}</span>
+      <button onclick="removeItem(${i})" title="Remove">✕</button>
+    </div>
+  `).join('');
+}
+
+function removeItem(i) {
+  if (items.length <= 2) { alert('Need at least 2 items.'); return; }
+  items.splice(i, 1);
+  renderItemsList();
+  drawWheel(currentAngle);
+}
+
+// ── History render ─────────────────────────────────────────────────
+function renderHistoryList() {
+  const el = document.getElementById('historyList');
+  if (spinHistory.length === 0) {
+    el.innerHTML = '<div class="empty-state">No spins yet</div>';
+    return;
+  }
+  el.innerHTML = spinHistory.map(h => `
+    <div class="history-item">
+      <span class="history-num">#${h.num}</span>
+      <div class="history-dot" style="background:${h.color}"></div>
+      <span class="history-name">${h.name}</span>
+      <span class="history-time">${h.time}</span>
+    </div>
+  `).join('');
+}
+
+function clearHistory() {
+  spinHistory = [];
+  spinCount = 0;
+  renderHistoryList();
+  const box = document.getElementById('resultBox');
+  box.classList.remove('has-result');
+  box.innerHTML = '<div class="result-label">Waiting for spin…</div>';
+}
+
+// ── Confetti ───────────────────────────────────────────────────────
+function launchConfetti(accent) {
+  const container = document.getElementById('confettiContainer');
+  container.innerHTML = '';
+  const colors = [accent, '#ffd23f', '#ffffff', '#06d6a0', '#ff6b35', '#c77dff'];
+  for (let i = 0; i < 80; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    const col = colors[Math.floor(Math.random() * colors.length)];
+    const x = Math.random() * 100;
+    const rot = Math.random() * 720 - 360;
+    const size = 6 + Math.random() * 8;
+    const shape = Math.random() > 0.5 ? '50%' : '2px';
+    el.style.cssText = `
+      left:${x}vw; top:-10px;
+      width:${size}px; height:${size}px;
+      background:${col};
+      border-radius:${shape};
+      animation: confettiFall ${1.5 + Math.random() * 1.5}s ease-in forwards;
+      animation-delay: ${Math.random() * 0.4}s;
+    `;
+    container.appendChild(el);
+  }
+  // cleanup
+  setTimeout(() => { container.innerHTML = ''; }, 4000);
+}
+
+// Confetti keyframes
+const style = document.createElement('style');
+style.textContent = `
+@keyframes confettiFall {
+  0%   { opacity:1; transform: translateY(0) rotate(0deg); }
+  100% { opacity:0; transform: translateY(100vh) rotate(var(--rot, 360deg)); }
+}
+`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
